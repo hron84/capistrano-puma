@@ -10,7 +10,12 @@ namespace :puma do
         else
           within current_path do
             with rack_env: fetch(:puma_env) do
-              execute :puma, "-C #{fetch(:puma_conf)} --daemon"
+              if fetch(:puma_daemon) and test :pumad, '--version' then
+                info 'Starting with puma-daemon'
+                execute :pumad, "-C #{fetch(:puma_conf)}"
+              else
+                execute :puma, "-C #{fetch(:puma_conf)} --daemon"
+              end
             end
           end
         end

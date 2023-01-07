@@ -104,6 +104,7 @@ module Capistrano
       # Configure "min" to be the minimum number of threads to use to answer
       # requests and "max" the maximum.
       set_if_empty :puma_threads, [0, 16]
+      set_if_empty :puma_daemon, true
       set_if_empty :puma_workers, 0
       set_if_empty :puma_rackup, -> { File.join(current_path, 'config.ru') }
       set_if_empty :puma_state, -> { File.join(shared_path, 'tmp', 'pids', 'puma.state') }
@@ -121,12 +122,12 @@ module Capistrano
       set_if_empty :puma_restart_command, 'bundle exec puma'
 
       # Chruby, Rbenv and RVM integration
-      append :chruby_map_bins, 'puma', 'pumactl'
-      append :rbenv_map_bins, 'puma', 'pumactl'
-      append :rvm_map_bins, 'puma', 'pumactl'
+      append :chruby_map_bins, 'puma', 'pumad', 'pumactl'
+      append :rbenv_map_bins, 'puma', 'pumad', 'pumactl'
+      append :rvm_map_bins, 'puma', 'pumad', 'pumactl'
 
       # Bundler integration
-      append :bundle_bins, 'puma', 'pumactl'
+      append :bundle_bins, 'puma', 'pumad', 'pumactl'
     end
 
     def register_hooks
